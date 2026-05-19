@@ -9,23 +9,29 @@ bool selectionMode = false;
 bool difficultySelect = false;
 bool mirrored = false;
 float multiplier = 0.0;
-String lStrip = ""; // 16 chars long
-String rStrip = ""; // 16 chars long
-int lNotes[] = {4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 42, 44, 50, 52, 58, 60};
-int rNotes[] = {8, 16, 24, 32, 38, 40, 46, 48, 51, 54, 56, 59, 62, 64};
+String lStrip = "";
+String rStrip = "";
+//int lNotes[] = {4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 42, 44, 50, 52, 58, 60};
+String lNotes = "------[]------[]------[]------[]------[]------[]------[]------[]--[]--[]----------[]--[]----------[]--[]----------[]--[]--------"; 
+//int rNotes[] = {8, 16, 24, 32, 38, 40, 46, 48, 51, 54, 56, 59, 62, 64};
+String rNotes = "--------------[]--------------[]--------------[]--------------[]----------[]--[]----------[]--[]----[]----[]--[]----[]----[]--[]";
+int progress = 0;
+int remainder = lNotes.length();
+int len = 16;
 
-void advance(String l, String r, float multiplier){
-  // lStrip and rStrip are plugged into this function later, as well as the multiplier
-  // mirroring is taken care of by function call, just make sure the strings are being rewritten
-  // notes DO NOT CORRESPOND TO INDICES
-  // positions not included in the notes should be two empty spaces or --
-  // positions included should be []
-  // Example:
-  //  first lStrip with current lNotes: ------[]------[]
-  //  first rStrip with current rNotes: --------------[]
-  // These should flow leftwards with each call
+advance(String l, String r, float multiplier, int progress, int remainder){
+  l = "";
+  r = "";
+  if (remainder < 16){
+    len--;
+  }
+  for (int i = progress; i < progress + len; i++){
+    l = l + lNotes[i];
+    r = r + rNotes[i];
+  }
+  remainder--;
+  progress++;
   delay((250 / 2) * multiplier);
-  // delay should be good but feel free to adjust if testing shows it is too slow/fast
 }
 
 void setup() {
@@ -129,10 +135,10 @@ void loop() {
   }
   else{
     if (mirrored){
-      advance(lStrip, rStrip, multiplier);
+      advance(lStrip, rStrip, multiplier, progress, remainder);
     }
     else{
-      advance(rStrip, lStrip, multiplier);
+      advance(rStrip, lStrip, multiplier, progress, remainder);
     }
 
     lcd.setCursor(0, 0);
